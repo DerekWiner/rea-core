@@ -1,0 +1,71 @@
+{
+  "schema": "https://rea.dev/schemas/investigation",
+  "schema_version": "1.0.0",
+  "investigation_id": "example.json-structure-check",
+  "created_at": "2026-10-28T10:00:00Z",
+  "title": "Synthetic JSON structure check",
+  "question": "Does the supplied synthetic record conform to the expected JSON shape?",
+  "status": "completed",
+  "domain": "software-tooling",
+  "summary": "A small illustrative record showing how REA separates artifacts, methods, evidence and findings. It is not a report of a real external experiment.",
+  "artifacts": [
+    {
+      "artifact_id": "fixture-001",
+      "kind": "file",
+      "description": "Synthetic fixture included with this repository.",
+      "media_type": "application/json",
+      "uri": "examples/fixture.json",
+      "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      "trust_level": "user_supplied",
+      "metadata": {
+        "synthetic": true
+      }
+    }
+  ],
+  "methods": [
+    {
+      "method_id": "method-schema-validation",
+      "name": "JSON Schema validation",
+      "tool": "rea-core",
+      "tool_version": "0.1.0",
+      "execution_mode": "static_analysis",
+      "network_access": false,
+      "parameters": {
+        "schema_version": "1.0.0"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evidence-schema-check",
+      "evidence_type": "observation",
+      "statement": "The example record conforms to the bundled investigation schema when checked with the REA Core validator.",
+      "artifact_ids": [
+        "fixture-001"
+      ],
+      "method_ids": [
+        "method-schema-validation"
+      ],
+      "observed_at": "2026-10-28T10:00:00Z",
+      "confidence": 1,
+      "limitations": [
+        "This is an illustrative repository fixture, not an independent validation of an external artifact."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "finding-contract-example",
+      "statement": "The example demonstrates the expected structure of a version 1 investigation record.",
+      "evidence_ids": [
+        "evidence-schema-check"
+      ],
+      "confidence": 1,
+      "status": "supported",
+      "validation_notes": "The example is synthetic and exists to exercise the schema and CLI."
+    }
+  ],
+  "limitations": [
+    "The schema validator checks structure only. It does not establish that a described method was run or that a finding is true."
+  ]
+}

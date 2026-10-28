@@ -11,7 +11,7 @@ from importlib.resources import files
 from pathlib import Path
 from typing import Any
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, FormatChecker
 
 SCHEMA_VERSION = "1.0.0"
 
@@ -35,7 +35,7 @@ def load_schema() -> dict[str, Any]:
 
 def validate_document(document: Any) -> list[ValidationIssue]:
     """Return structural validation issues. An empty list means the document is valid."""
-    validator = Draft202012Validator(load_schema())
+    validator = Draft202012Validator(load_schema(), format_checker=FormatChecker())
     issues = []
     for error in sorted(validator.iter_errors(document), key=lambda item: list(map(str, item.absolute_path))):
         path = "/" + "/".join(str(part).replace("~", "~0").replace("/", "~1") for part in error.absolute_path)

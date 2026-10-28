@@ -1,0 +1,364 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/DerekWiner/rea-core/blob/main/src/rea_core/schemas/investigation.schema.json",
+  "title": "REA Investigation Record",
+  "description": "Version 1 domain-neutral record for an evidence-driven investigation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "investigation_id",
+    "created_at",
+    "question",
+    "status",
+    "artifacts",
+    "evidence",
+    "findings"
+  ],
+  "properties": {
+    "schema": {
+      "const": "https://rea.dev/schemas/investigation"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "investigation_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 10000
+    },
+    "status": {
+      "enum": [
+        "planned",
+        "in_progress",
+        "completed",
+        "blocked",
+        "abandoned"
+      ]
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 20000
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifact"
+      }
+    },
+    "methods": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/method"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 5000
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Domain-specific metadata. Namespace keys to avoid collisions.",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "kind",
+        "description"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "kind": {
+          "enum": [
+            "file",
+            "repository",
+            "dataset",
+            "model",
+            "model_output",
+            "document",
+            "binary",
+            "service",
+            "other"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 5000
+        },
+        "media_type": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "uri": {
+          "type": "string",
+          "format": "uri-reference",
+          "maxLength": 4000
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{64}$"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "acquired_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "trust_level": {
+          "enum": [
+            "unknown",
+            "untrusted",
+            "user_supplied",
+            "trusted_source",
+            "verified"
+          ]
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method_id",
+        "name"
+      ],
+      "properties": {
+        "method_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 5000
+        },
+        "tool": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "tool_version": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "execution_mode": {
+          "enum": [
+            "not_run",
+            "static_analysis",
+            "sandboxed",
+            "controlled_environment",
+            "external_service",
+            "unknown"
+          ]
+        },
+        "network_access": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 5000
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "evidence_type",
+        "statement",
+        "observed_at"
+      ],
+      "properties": {
+        "evidence_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "evidence_type": {
+          "enum": [
+            "observation",
+            "reported_claim",
+            "interpretation",
+            "hypothesis",
+            "independent_verification"
+          ]
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "artifact_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "method_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_reference": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "statement",
+        "evidence_ids",
+        "confidence",
+        "status"
+      ],
+      "properties": {
+        "finding_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "evidence_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "supported",
+            "contradicted",
+            "independently_replicated",
+            "unresolved"
+          ]
+        },
+        "validation_notes": {
+          "type": "string",
+          "maxLength": 10000
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        },
+        "related_finding_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

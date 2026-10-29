@@ -50,7 +50,7 @@ Version 1 is intentionally small. Schema changes that break existing valid recor
 
 ## Current limitations
 
-The validator checks structural conformance only. It does not verify whether an experiment actually ran, whether a source is trustworthy, whether a hash matches an artifact on disk, or whether a conclusion is scientifically correct. Those require separate verification workflows.
+The validator checks schema conformance, unique record IDs and internal references between evidence, artifacts, methods and findings. These checks are still structural. They do not verify whether an experiment actually ran, whether a source is trustworthy, whether a hash matches an artifact on disk, or whether a conclusion is scientifically correct. Those require separate verification workflows.
 
 ## License
 
